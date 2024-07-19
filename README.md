@@ -6,6 +6,7 @@ Features:
 - adaptable layout for landscape and portrait with automatic resizing;
 - support for keyboard, mouse and touch/slide controls;
 - smooth fast rendering on native HTML elements;
+- features held pieces system, scoring system, soft and hard drops, t-spinning, difficulty select, and pausing;
 - local storage of highscores;
 - retro design made with vanilla CSS and DOM;
 - standalone offline with no external assets;
