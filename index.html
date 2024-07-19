@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preload" href="./assets/css/joystix.otf" as="font" type="font" crossorigin>
+    <title>Коробе́йники</title>
+    <link rel="stylesheet" type="text/css" href="./assets/css/style.css">
+    <audio preload="auto" id="bgm" src="./assets/audio/Korobeiniki.mp3" type="audio/mpeg"></audio>
+</head>
+<body>
+    <div id="overlay" onclick="pause ()"><img src="./assets/img/static/key.png" id="keys"><div id="text">PAUSE</div></div>
+    <div class="overhead"><h1>KOROBEINIKI</h1></div>
+    <div class='wrapper' id="wrapper">
+        <div id="header" class="header">
+            <span id="level">Level 0</span>
+            <span id="lines">Lines 0</span>
+        </div>
+        <div id="hold" class="hold"><p class="wheader">HOLD</p><div class="window"><canvas id="holdt" class="windowt"></canvas></div></div>
+        <div id="menu" class="menu">
+            <button type="button" id="openstart" onclick="startGame ()">START</button>
+            <button type="button" id="pause" onclick="pause ()">PAUSE</button>
+            <div id="lvlselect" class="lvl">
+                <p>Select Level</p><br>
+                <button type="button" onclick="startLevel (0)">0</button>
+                <button type="button" onclick="startLevel (1)">1</button>
+                <button type="button" onclick="startLevel (2)">2</button>
+                <button type="button" onclick="startLevel (3)">3</button>
+                <button type="button" onclick="startLevel (4)">4</button>
+                <button type="button" onclick="startLevel (5)">5</button>
+                <button type="button" onclick="startLevel (6)">6</button>
+                <button type="button" onclick="startLevel (7)">7</button>
+                <button type="button" onclick="startLevel (8)">8</button>
+                <button type="button" onclick="startLevel (9)">9</button>
+            </div>
+            <div class="high">
+            <span id="score">Score <br>0</span>
+            <p id="high">HIGH</p>
+            </div>
+<!--             <div class="vcontrols" id="vcontrols">
+                <div class="left" id="left">&lt;</div>
+                <div class="up" id="up">↷</div>
+                <div class="down" id="down">˅</div>
+                <div class="right" id="right">&gt;</div>
+            </div> -->
+        </div>
+        <div class="playfield">
+        <canvas id="gamegrid"></canvas>
+        <canvas id="gameeffects"></canvas>
+        </div>
+        <div id="next" class="next"><p class="wheader">NEXT</p><div class="window"><canvas id="nextt" class="windowt"></canvas></div></div>
+        <div class="vcontrols" id="vcontrols">
+            <div class="rl" id="rl"><img src="./assets/img/static/rotatel.png"></div>
+            <div class="left" id="left">&lt;</div>
+            <div class="up" id="up"><img src="./assets/img/static/hard.png"></div>
+            <div class="down" id="down">V</div>
+            <div class="rr" id="rr"><img src="./assets/img/static/rotatel.png"></div>
+            <div class="right" id="right">&gt;</div>
+        </div>
+    </div>
+    <div class="help"><p>MOVER PEÇA: SETAS,"A","S","D";<br>
+                        GIRAR PEÇA: "Z","Q","X","E";<br>
+                        DERRUBAR: SETA CIMA, "W";<br>
+                        GUARDAR PEÇA: "C", ESPAÇO, CLIQUE(HOLD);<br>
+                        PAUSAR: "ESC"</p></div>
+</body>
+<script src="main.js" onload="high ()"></script>
+
+</html>
