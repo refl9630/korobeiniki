@@ -12,3 +12,5 @@ Features:
 - original rendition of the classic russian folk song "Korobeiniki".
 
 This project is intended as a learning experience by a beginner programmer.
+
+web version: https://rlworks.itch.io/korobeiniki
