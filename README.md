@@ -4,7 +4,7 @@ HTML5/CSS/JS web app based on the game Tetris. All code and assets are authored 
 Features:
 - 10 difficulty levels;
 - adaptable layout for landscape and portrait with automatic resizing;
-- support for keyboard, mouse and touch/slide controls;
+- support for keyboard, mouse, and touch controls;
 - smooth fast rendering on native HTML elements;
 - features held pieces system, scoring system, soft and hard drops, t-spinning, difficulty select, and pausing;
 - local storage of highscores;
