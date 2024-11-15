@@ -1,11 +1,11 @@
-const field = document.getElementById('gamegrid')
-const fieldctx = field.getContext("2d");
-const effects = document.getElementById('gameeffects')
-const effectsctx = field.getContext("2d");
-field.height = 800
-field.width = 400
-effects.height = 800
-effects.width = 400
+//const field = document.getElementById('gamegrid')
+//const fieldctx = field.getContext("2d");
+//const effects = document.getElementById('gameeffects')
+//const effectsctx = field.getContext("2d");
+//field.height = 800
+//field.width = 400
+//effects.height = 800
+//effects.width = 400
 const held = document.getElementById('holdt');
 const heldctx = held.getContext('2d');
 held.width = 200
@@ -22,6 +22,9 @@ var holdKey = false
 const cellSize = 40
 const cellBuffer = 4
 
+const field = new CanvasContext()
+
+
 class cell {
     constructor (line, column, attribute) {
         this.line = line
@@ -37,12 +40,16 @@ class cell {
     draw () {
 
         if (this.attribute != 0) {
-            fill(fieldctx, this.xPosition(), this.yPosition(), this.attribute)
+            let color = tetromino[this.attribute].color
+            let dark = tetromino[this.attribute].dark
+//            fill(fieldctx, this.xPosition(), this.yPosition(), this.attribute)
+            field.fill(this.xPosition(), this.yPosition(), color, dark, cellSize)
         }
         else {
-		fieldctx.lineWidth = 1 
+/* 		fieldctx.lineWidth = 1 
         fieldctx.strokeStyle = "rgb(100, 100, 100)" 
-        fieldctx.strokeRect(this.xPosition(), this.yPosition(), cellSize,cellSize)
+        fieldctx.strokeRect(this.xPosition(), this.yPosition(), cellSize,cellSize) */
+            field.blank(this.xPosition(), this.yPosition(), cellSize)
 		}
     }
     drawSpark () {
@@ -264,6 +271,11 @@ const select = document.getElementById('lvlselect');
 function startGame () {
     select.style.visibility = "visible"
     document.getElementById('openstart').style.animation = 'none'
+    select.addEventListener('click', function (e) {
+        let l = e.target.value
+        console.log(l);
+        startLevel(l)
+    })
 }
 function startLevel (l) {
     select.style.visibility = "hidden"
@@ -701,7 +713,8 @@ function hold () {
 
 //atualizar tela
 function drawGrid () {
-    fieldctx.clearRect(0,0,field.width,field.height)
+    //fieldctx.clearRect(0,0,field.width,field.height)
+    field.clear()
     for (let i = 5; i <= 24; i++) {
         for (let j = 1; j <= 10; j++) {
             let att = gameMap[i-1][j-1]
@@ -878,3 +891,14 @@ function activebtn () {
         }
     }, 100);
   }
+
+  function main () {
+    high ();
+    document.getElementById('openstart').addEventListener('click', startGame)
+    field.setElement('gamegrid');
+    field.setDimentions(400, 800);
+    console.log(field.getInfo());
+    
+  }
+
+  main()

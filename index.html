@@ -18,20 +18,20 @@
         </div>
         <div id="hold" class="hold"><p class="wheader">HOLD</p><div class="window"><canvas id="holdt" class="windowt"></canvas></div></div>
         <div id="menu" class="menu">
-            <button type="button" id="openstart" onclick="startGame ()">START</button>
-            <button type="button" id="pause" onclick="pause ()">PAUSE</button>
+            <button type="button" id="openstart">START</button>
+            <button type="button" id="pause">PAUSE</button>
             <div id="lvlselect" class="lvl">
                 <p>Select Level</p><br>
-                <button type="button" onclick="startLevel (0)">0</button>
-                <button type="button" onclick="startLevel (1)">1</button>
-                <button type="button" onclick="startLevel (2)">2</button>
-                <button type="button" onclick="startLevel (3)">3</button>
-                <button type="button" onclick="startLevel (4)">4</button>
-                <button type="button" onclick="startLevel (5)">5</button>
-                <button type="button" onclick="startLevel (6)">6</button>
-                <button type="button" onclick="startLevel (7)">7</button>
-                <button type="button" onclick="startLevel (8)">8</button>
-                <button type="button" onclick="startLevel (9)">9</button>
+                <button type="button" value="0">0</button>
+                <button type="button" value="1">1</button>
+                <button type="button" value="2">2</button>
+                <button type="button" value="3">3</button>
+                <button type="button" value="4">4</button>
+                <button type="button" value="5">5</button>
+                <button type="button" value="6">6</button>
+                <button type="button" value="7">7</button>
+                <button type="button" value="8">8</button>
+                <button type="button" value="9">9</button>
             </div>
             <div class="high">
             <span id="score">Score <br>0</span>
@@ -64,6 +64,7 @@
                         GUARDAR PEÇA: "C", ESPAÇO, CLIQUE(HOLD);<br>
                         PAUSAR: "ESC"</p></div>
 </body>
-<script src="main.js" onload="high ()"></script>
+<script src="assets/js/CanvasContext.js"></script>
+<script src="main.js"></script>
 
 </html>
