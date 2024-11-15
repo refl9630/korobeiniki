@@ -57,6 +57,7 @@ const Sounds = {
 		this.bgm.src = info['path'];
 		this.bgm.loop = true;
 		this.bgm.preload = "auto";
+		this.bgm.volume = 0.7;
 	},
 	load (path, loop, name) {
 		this.sfx[name].src = path;

@@ -1,12 +1,8 @@
-//const bgm = new Audio('./assets/audio/Korobeiniki.mp3')
-//bgm.loop = true
-//bgm.preload = "auto"
-var holdKey = false
 
-const cellSize = 40
-const cellBuffer = 4
+
 
 //canvas elements info
+const cellSize = 40
 const ce_field = new CanvasContext()
 const ce_held = new CanvasContext()
 const ce_next = new CanvasContext()
@@ -38,171 +34,8 @@ const canvasElements = {
 
 
 
+const cellBuffer = 4
 
-class cell {
-    constructor (line, column, attribute) {
-        this.line = line
-        this.column = column
-        this.attribute = attribute
-    }
-    xPosition () {
-        return (this.column - 1)*cellSize 
-    }
-    yPosition () {
-        return (this.line-1-cellBuffer)*cellSize 
-    }
-    draw () {
-        if (this.attribute != 0) {
-            let color = tetromino[this.attribute].color
-            let dark = tetromino[this.attribute].dark
-            ce_field.fill(this.xPosition(), this.yPosition(), color, dark, cellSize)
-        }
-        else {
-            ce_field.blank(this.xPosition(), this.yPosition(), cellSize)
-		}
-    }
-}
-
-const tetromino = {
-    1 : {
-        name: "i",
-        color: "aqua",
-        dark: "rgb(0, 200, 200)",
-        shape: {0: [[0,0,0,0],
-                    [2,2,2,2],
-                    [0,0,0,0],
-                    [0,0,0,0]],
-                1: [[0,0,2,0],
-                    [0,0,2,0],
-                    [0,0,2,0],
-                    [0,0,2,0]],
-                2: [[0,0,0,0],
-                    [0,0,0,0],
-                    [2,2,2,2],
-                    [0,0,0,0]],
-                3: [[0,2,0,0],
-                    [0,2,0,0],
-                    [0,2,0,0],
-                    [0,2,0,0]]
-                }
-    
-        },
-    2 : {
-        name: "s",
-        color: "lime",
-        dark: "rgb(0, 200, 0)",
-        shape: {0: [[0,2,2],
-                    [2,2,0],
-                    [0,0,0]],
-                1: [[0,2,0],
-                    [0,2,2],
-                    [0,0,2]],
-                2: [[0,0,0],
-                    [0,2,2],
-                    [2,2,0]],
-                3: [[2,0,0],
-                    [2,2,0],
-                    [0,2,0]]
-            }
-        },
-    3 : {
-        name: "z",
-        color: "red",
-        dark: "rgb(200, 0, 0)",
-        shape: {0: [[2,2,0],
-                    [0,2,2],
-                    [0,0,0]],
-                1: [[0,0,2],
-                    [0,2,2],
-                    [0,2,0]],
-                2: [[0,0,0],
-                    [2,2,0],
-                    [0,2,2]],
-                3: [[0,2,0],
-                    [2,2,0],
-                    [2,0,0]]
-                }
-        },
-    4 : {
-        name: "o",
-        color: "yellow",
-        dark: "rgb(200, 200, 0)",
-        shape: {0: [[2,2],
-                    [2,2]],
-                1: [[2,2],
-                    [2,2]],
-                2: [[2,2],
-                    [2,2]],
-                3: [[2,2],
-                    [2,2]],
-            }  
-        },
-    5 : {
-        name: "t",
-        color: "purple",
-        dark: "rgb(100, 0, 100)",
-        shape: {0: [[0,2,0],
-                    [2,2,2],
-                    [0,0,0]],
-                1: [[0,2,0],
-                    [0,2,2],
-                    [0,2,0]],
-                2: [[0,0,0],
-                    [2,2,2],
-                    [0,2,0]],
-                3: [[0,2,0],
-                    [2,2,0],
-                    [0,2,0]]
-                }
-    },
-    6 : {
-        name: "l",
-        color: "orange",
-        dark: "rgb(200, 120, 0)",
-        shape: {0: [[0,0,2],
-                    [2,2,2],
-                    [0,0,0]],
-                1: [[0,2,0],
-                    [0,2,0],
-                    [0,2,2]],
-                2: [[0,0,0],
-                    [2,2,2],
-                    [2,0,0]],
-                3: [[2,2,0],
-                    [0,2,0],
-                    [0,2,0]]
-                }
-        },
-    7 : {
-        name: "j",
-        color: "blue",
-        dark: "rgb(0, 0, 180)",
-        shape: {0: [[2,0,0],
-                    [2,2,2],
-                    [0,0,0]],
-                1: [[0,2,2],
-                    [0,2,0],
-                    [0,2,0]],
-                2: [[0,0,0],
-                    [2,2,2],
-                    [0,0,2]],
-                3: [[0,2,0],
-                    [0,2,0],
-                    [2,2,0]]
-        }
-    }
-}
-function getMap (shape) {
-    let map = []
-    for (let i = 0; i < shape.length; i++) {
-        for (let j = 0; j < shape.length; j++) {
-            if (shape[i][j] == 2) {
-                map.push({y: i, x: j})
-            }
-        }
-    }
-    return map
-}
 
 let speed = 800
 let score = 0
@@ -212,60 +45,7 @@ let waitState = false
 let hscore
 let paused = false
 let indanger = false
-//block color map
-let gameMap = [
-    [0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0]
-]
-//block attribute map
-let stateMap = [
-    [0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0]
-]
+
 
 let rotation = 0
 let deltaY
@@ -275,15 +55,27 @@ let heldPiece
 let nextPiece
 let graceFrames = 2
 
+
+
 const select = document.getElementById('lvlselect');
 function startGame () {
     select.style.visibility = "visible"
+    
     document.getElementById('openstart').style.animation = 'none'
     select.addEventListener('click', function (e) {
+        console.log(e.target);
+        
+        if (e.target.type == "button") {
         let l = e.target.value
         console.log(l);
+        
+        document.getElementById('pause').addEventListener('click', pause);
         startLevel(l)
-    })
+        }
+        else {
+            startGame()
+        }
+    }, {once: true})
 }
 function startLevel (l) {
     select.style.visibility = "hidden"
@@ -355,9 +147,9 @@ function high () {
 function updateState () {
     if (paused == false) {
     let falling = true
-    let movingblocks = fallingBlocks ()
+    let movingblocks = GameState.fallingblocks
     if (movingblocks.length > 4) {
-        console.log(gameMap, stateMap);
+        console.log(GameState.gameMap, GameState.stateMap);
     }
     for (let i = 0; i < movingblocks.length; i++) {
         let myblock = movingblocks[i]
@@ -394,8 +186,8 @@ function generateTetromino () {
     for (let i = 0; i < shape[0].length; i++) {
         for (let j = 0; j < shape[0].length; j++) {
             if (shape[0][i][j] == 2) {
-                gameMap[i][j+startingx] = piece
-                stateMap[i][j+startingx] = 2
+                GameState.gameMap[i][j+startingx] = piece
+                GameState.stateMap[i][j+startingx] = 2
             }
         }
     }
@@ -406,8 +198,8 @@ function settle (falling) {
     Sounds.playFX("move")
     for (let i = 0; i < movingblocks.length; i++) {
         let myblock = movingblocks[i]
-        gameMap[myblock.y][myblock.x] = piece;
-        stateMap[myblock.y][myblock.x] = 1;
+        GameState.gameMap[myblock.y][myblock.x] = piece;
+        GameState.stateMap[myblock.y][myblock.x] = 1;
     }
     let lines = checkLine ()
     if (lines != false) {
@@ -426,7 +218,7 @@ function settle (falling) {
 function checkLine () {
     let completed = []
     for (let i = 23; i >= 0; i--) {
-        const myline = stateMap[i] 
+        const myline = GameState.stateMap[i] 
         let score = true
             for (let j = 0; j < 10; j++) {
                 if (myline[j] == 1) {
@@ -447,14 +239,14 @@ function clearLines (lines) {
     const points = [40,100,300,1200];
     Sounds.playFX("beam")
     for (let i = 0; i < lines.length; i++) {
-        stateMap.splice(lines[i], 1);
-        gameMap.splice(lines[i], 1);
+        GameState.stateMap.splice(lines[i], 1);
+        GameState.gameMap.splice(lines[i], 1);
     }
     for (let i = 0; i < lines.length; i++) {
         let newLine = [0,0,0,0,0,0,0,0,0,0];
         let newLine2 = [0,0,0,0,0,0,0,0,0,0];
-        gameMap.splice(0, 0, newLine);
-        stateMap.splice(0, 0, newLine2);
+        GameState.gameMap.splice(0, 0, newLine);
+        GameState.stateMap.splice(0, 0, newLine2);
     }
     linesCleared += lines.length;
     score += (points[lines.length-1]*(level+1)); 
@@ -466,7 +258,7 @@ function clearLines (lines) {
 function isOver () {
     for (let i = 0; i < 4; i++) {
         for (let j = 0; j < 10; j++) {
-            if (stateMap[i][j] == 1) {
+            if (GameState.stateMap[i][j] == 1) {
                 return true;
             }
         }
@@ -479,7 +271,7 @@ function pause () {
         case true:
             pauseButton.style.backgroundColor = "rgb(255, 210, 210)";
             pauseButton.innerHTML = "PAUSE";
-            Sounds.bgm.volume = 1
+            Sounds.bgm.volume = 0.7
             overlayOff ()
             waitState = false;
             paused = false;
@@ -496,7 +288,7 @@ function pause () {
 
 }
 function danger () {
-    let dangerline = stateMap[9]
+    let dangerline = GameState.stateMap[9]
     for (let i = 0; i < dangerline.length; i++) {
         if(dangerline[i] == 1) {
             Sounds.toggleDanger(true);
@@ -509,15 +301,15 @@ function danger () {
 //movimento
 function moveDown (falling, drop) {
     let movelist = falling 
-    eraseMoving ()
+    GameState.eraseMoving ()
     let attribute = piece
     for (let i = movelist.length-1; i >= 0; i--) {
         const move = movelist[i]
         let to = move.y + drop
-        gameMap[to][move.x] = attribute
-        gameMap[move.y][move.x] = 0
-        stateMap[move.y][move.x] = 0
-        stateMap[to][move.x] = 2
+        GameState.gameMap[to][move.x] = attribute
+        GameState.gameMap[move.y][move.x] = 0
+        GameState.stateMap[move.y][move.x] = 0
+        GameState.stateMap[to][move.x] = 2
     }
     deltaY++
     graceFrames = 2
@@ -527,7 +319,7 @@ function checkUnder (line, column) {
     if (line == 23) {
         return false
     }
-    else if ((stateMap[line+1][column]) == 1) {
+    else if ((GameState.stateMap[line+1][column]) == 1) {
         return false
     }
     else {
@@ -536,7 +328,7 @@ function checkUnder (line, column) {
 function moveSide (side) {
     if (paused == false) {
     let blocked = false
-    let movingblocks = fallingBlocks ()
+    let movingblocks = GameState.fallingblocks
     const attribute = piece
     for (let i = 0; i < movingblocks.length; i++) {
         let myblock = movingblocks[i]
@@ -557,8 +349,8 @@ function moveSide (side) {
         };
     for (let i = movingblocks.length-1; i >= 0; i--) {
         const move = movingblocks[i];
-        gameMap[move.y][move.x] = 0;
-        stateMap[move.y][move.x] = 0;
+        GameState.gameMap[move.y][move.x] = 0;
+        GameState.stateMap[move.y][move.x] = 0;
     }
     for (let i = movingblocks.length-1; i >= 0; i--) {
         const move = movingblocks[i];
@@ -572,8 +364,8 @@ function moveSide (side) {
                 to = column+1;
                 break;
         };
-        gameMap[move.y][to] = attribute
-        stateMap[move.y][to] = 2
+        GameState.gameMap[move.y][to] = attribute
+        GameState.stateMap[move.y][to] = 2
         }
     graceFrames = 2
     drawGrid ()
@@ -596,32 +388,17 @@ function checkSides (line, column, side) {
     if (column == wall) {
         return false
     }
-    else if ((stateMap[line][direction]) == 1) {
+    else if ((GameState.stateMap[line][direction]) == 1) {
         return false
     }
     else {
         return true}
 }
-function fallingBlocks () {
-    let fallingBlocks = []
-    for (let i = 1; i <= 24; i++) {
-        for (let j = 1; j <= 10; j++) {
-            let st = stateMap[i-1][j-1]
-            let position = {x: j-1, y: i-1}
-            if (st == 2) {
-                    fallingBlocks.push(position)
-                }
-            }
-        }
-    if (fallingBlocks.length > 4) {
-        console.log(gameMap, stateMap);
-    }
-    return fallingBlocks
-}
+
 function hardDrop () {
     waitState = true;
     let falling = true
-    let movingblocks = fallingBlocks ()
+    let movingblocks = GameState.fallingblocks
 	if (!holdKey) {
 	holdKey = true
     if (paused == false) {
@@ -640,7 +417,7 @@ function hardDrop () {
         score += ((j-1)*2)
         updateScore ()
     } 
-    settle (fallingBlocks ())
+    settle (GameState.fallingblocks)
     waitState = false 
 	}
 }
@@ -666,13 +443,13 @@ function rotate (direction) {
         can = canRotate(next)
     }
     if (can == true) {
-        eraseMoving ()
+        GameState.eraseMoving ()
         Sounds.playFX('roll')
         for (let i = 0; i < next.length; i++) {
                 let x = next[i].x
                 let y = next[i].y
-                    gameMap[deltaY+y][deltaX+x] = piece
-                    stateMap[deltaY+y][deltaX+x] = 2
+                    GameState.gameMap[deltaY+y][deltaX+x] = piece
+                    GameState.stateMap[deltaY+y][deltaX+x] = 2
             }
         }
         rotation = n
@@ -684,7 +461,7 @@ function rotate (direction) {
 function canRotate (shape) {
     for (let i = 0; i < shape.length; i++) {
         const cor = shape[i];
-        if (stateMap[deltaY+cor.y][deltaX+cor.x] == 1) {
+        if (GameState.stateMap[deltaY+cor.y][deltaX+cor.x] == 1) {
             return false
         }
     }
@@ -708,14 +485,7 @@ function nextRotation (cr, di) {
     }
 
 }
-function eraseMoving () {
-    let moving = fallingBlocks ()
-    for (let i = 0; i < moving.length; i++) {
-        let cell = moving[i]
-        gameMap[cell.y][cell.x] = 0
-        stateMap[cell.y][cell.x] = 0      
-    }
-}
+
 
 //guardar
 function hold () {
@@ -741,11 +511,12 @@ function drawGrid () {
     for (let i = 5; i <= 24; i++) {
 
         for (let j = 1; j <= 10; j++) {
-            let att = gameMap[i-1][j-1]
+            let att = GameState.getAtt(i-1, j-1)
             let myCell = new cell (i, j, att)
             myCell.draw()
         }
     }
+    GameState.update()
 }
 function updateHold () {
     ce_held.clear()
@@ -773,136 +544,7 @@ function updateNext () {
         }
     }
 }
-function updateScore () {
-    const lvl = document.getElementById('level');
-    const ln = document.getElementById('lines');
-    const sc = document.getElementById('score');
-    lvl.innerHTML = "Level " + level
-    ln.innerHTML = "Lines " + linesCleared
-    sc.innerHTML = "Score<br>" + score
-}
-function overlayOn() {
-    document.getElementById("overlay").style.display = "block";
-  }
-function overlayOff() {
-    document.getElementById("overlay").style.display = "none";
-  }
 
-
-//controle virtual
-const btnContainer = document.getElementById("vcontrols");
-const btns = btnContainer.getElementsByTagName("div");
-btns[1].addEventListener("click", function (e) {
-    let bt = btns[1]
-    highlight(bt)
-    moveSide("l");
-});
-btns[2].addEventListener("click", function (e) {
-	let bt = btns[2]
-    highlight(bt)
-	hardDrop ()
-	document.addEventListener("mouseup", function () {
-		holdKey = false
-		document.removeEventListener("mouseup")
-	}) 
-});
-btns[3].addEventListener("click", function (e) {
-    let bt = btns[3]
-    highlight(bt)
-    score++
-	updateState();
-    updateScore();
-});
-btns[5].addEventListener("click", function (e) {
-    let bt = btns[5]
-    highlight(bt)
-	moveSide("r");
-});
-btns[4].addEventListener("click", function (e) {
-    let bt = btns[4]
-    highlight(bt)
-	rotate("cw");
-});
-btns[0].addEventListener("click", function (e) {
-    let bt = btns[0]
-    highlight(bt)
-	rotate("ccw");
-});
-document.getElementById("hold").addEventListener("click", function () {
-	hold();
-});
-document.addEventListener("dblclick", function (e) {
-    e.preventDefault()
-})
-//teclado
-document.addEventListener("keydown", function (e) {
-    let mykey = e.code
-    let vbtn
-    switch (mykey) {
-        case "ArrowLeft":
-        case "KeyA":
-            vbtn = btns[1];
-            moveSide("l");
-            break;
-        case "ArrowRight":
-        case "KeyD":
-            vbtn = btns[5];
-            moveSide("r");
-            break;
-        case "KeyX":
-        case "KeyE":
-            vbtn = btns[4];
-            rotate("cw");
-            break;
-        case "KeyZ":
-        case "KeyQ":
-            vbtn = btns[0];
-            rotate("ccw");
-            break;
-        case "ArrowDown":
-        case "KeyS":
-            vbtn = btns[3];
-            score++
-            updateState();
-            updateScore()
-            break;
-        case "KeyC":
-        case "Space":
-            hold();
-            break;
-        case "Escape":
-            pause ();
-            break;
-        case "ArrowUp":
-        case "KeyW":
-            vbtn = btns[2];
-            hardDrop ();
-            break;
-        default:
-            break;
-    }
-    if (vbtn != undefined) {
-        vbtn.classList.add('active');
-        document.addEventListener('keyup', activebtn)
-    }
-})
-
-function highlight (bt) {
-    let vbtn = bt
-    vbtn.classList.add('active');
-    activebtn ()
-}
-
-function activebtn () {
-	holdKey = false
-    document.removeEventListener('keyup', activebtn)
-    setTimeout(function () {
-        let current = document.getElementsByClassName("active");
-        for (let i = 0; i < current.length; i++) {
-            current[i].className = current[i].className.replace(" active", "");
-        }
-    }, 100);
-  }
 
   function main () {
     high ();
