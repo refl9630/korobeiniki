@@ -1,6 +1,22 @@
-//const bgm = new Audio('./assets/audio/Korobeiniki.mp3')
-//bgm.loop = true
-//bgm.preload = "auto"
+//const ce_field = document.getElementById('gamegrid')
+//const ce_fieldctx = ce_field.getContext("2d");
+//const effects = document.getElementById('gameeffects')
+//const effectsctx = ce_field.getContext("2d");
+//ce_field.height = 800
+//ce_field.width = 400
+//effects.height = 800
+//effects.width = 400
+//const held = document.getElementById('holdt');
+//const heldctx = held.getContext('2d');
+//held.width = 200
+//held.height = 200
+//const nextcanvas = document.getElementById('nextt');
+//const nextctx = nextcanvas.getContext('2d');
+//nextcanvas.width = 200
+//nextcanvas.height = 200
+const bgm = new Audio('./assets/audio/Korobeiniki.mp3')
+bgm.loop = true
+bgm.preload = "auto"
 var holdKey = false
 
 const cellSize = 40
@@ -211,7 +227,6 @@ let level = 0
 let waitState = false
 let hscore
 let paused = false
-let indanger = false
 //block color map
 let gameMap = [
     [0,0,0,0,0,0,0,0,0,0],
@@ -290,7 +305,7 @@ function startLevel (l) {
     document.getElementById('openstart').style.display = "none";
     document.getElementById('pause').style.display = "block";
     level = l - 1
-    Sounds.bgm.play()
+    bgm.play()
     levelUp ()
     startingl = l
     updateScore ()
@@ -403,7 +418,6 @@ function generateTetromino () {
 }
 function settle (falling) {
     let movingblocks = falling
-    Sounds.playFX("move")
     for (let i = 0; i < movingblocks.length; i++) {
         let myblock = movingblocks[i]
         gameMap[myblock.y][myblock.x] = piece;
@@ -418,7 +432,6 @@ function settle (falling) {
             gameOver ();
             break;
         case false:
-            danger();
             generateTetromino ();
             break;
     };
@@ -445,7 +458,6 @@ function checkLine () {
 }
 function clearLines (lines) {
     const points = [40,100,300,1200];
-    Sounds.playFX("beam")
     for (let i = 0; i < lines.length; i++) {
         stateMap.splice(lines[i], 1);
         gameMap.splice(lines[i], 1);
@@ -479,7 +491,7 @@ function pause () {
         case true:
             pauseButton.style.backgroundColor = "rgb(255, 210, 210)";
             pauseButton.innerHTML = "PAUSE";
-            Sounds.bgm.volume = 1
+            bgm.volume = 1
             overlayOff ()
             waitState = false;
             paused = false;
@@ -487,23 +499,13 @@ function pause () {
         case false:
             pauseButton.style.backgroundColor = "red";
             pauseButton.innerHTML = "PAUSED";
-            Sounds.bgm.volume = 0.2
+            bgm.volume = 0.2
             overlayOn ()
             waitState = true;
             paused = true;
             break;
     };
 
-}
-function danger () {
-    let dangerline = stateMap[9]
-    for (let i = 0; i < dangerline.length; i++) {
-        if(dangerline[i] == 1) {
-            Sounds.toggleDanger(true);
-            return;
-        }
-    }
-    Sounds.toggleDanger(false)
 }
 
 //movimento
@@ -546,7 +548,6 @@ function moveSide (side) {
         }
     } 
     if (blocked == false) {
-        Sounds.playFX("move")
         switch (side) {
             case "l":
                 deltaX--
@@ -635,7 +636,6 @@ function hardDrop () {
             }
             j++
         }
-        Sounds.playFX("drop")
         moveDown (movingblocks, j-1)
         score += ((j-1)*2)
         updateScore ()
@@ -667,7 +667,6 @@ function rotate (direction) {
     }
     if (can == true) {
         eraseMoving ()
-        Sounds.playFX('roll')
         for (let i = 0; i < next.length; i++) {
                 let x = next[i].x
                 let y = next[i].y
@@ -737,9 +736,9 @@ function hold () {
 
 //atualizar tela
 function drawGrid () {
+    //fieldctx.clearRect(0,0,field.width,field.height)
     ce_field.clear()
     for (let i = 5; i <= 24; i++) {
-
         for (let j = 1; j <= 10; j++) {
             let att = gameMap[i-1][j-1]
             let myCell = new cell (i, j, att)
@@ -748,6 +747,7 @@ function drawGrid () {
     }
 }
 function updateHold () {
+//    heldctx.clearRect(0,0,nextcanvas.width,nextcanvas.height)
     ce_held.clear()
     let shape = tetromino[heldPiece].shape
     let color = tetromino[heldPiece].color
@@ -756,11 +756,13 @@ function updateHold () {
         for (let j = 0; j < shape[0].length; j++) {
             if (shape[0][i][j] == 2) {
                 ce_held.fill(j*cellSize, i*cellSize, color, dark, cellSize)
+                //fill (heldctx, j*40, i*40, heldPiece)
             }
         }
     }
 }
 function updateNext () {
+//    nextctx.clearRect(0,0,nextcanvas.width,nextcanvas.height)
     ce_next.clear()
     let shape = tetromino[nextPiece].shape
     let color = tetromino[nextPiece].color
@@ -787,6 +789,20 @@ function overlayOn() {
 function overlayOff() {
     document.getElementById("overlay").style.display = "none";
   }
+function fill (context, x, y, type) {
+	let color = tetromino[type].color
+	let dark = tetromino[type].dark
+	let inner = cellSize/16
+	context.lineWidth = 1 
+    context.strokeStyle = "black" 
+    context.strokeRect(x, y, cellSize,cellSize)
+	context.fillStyle = color
+	context.fillRect(x, y, cellSize,cellSize)
+    context.strokeStyle = dark
+    context.lineWidth = 5
+	context.fillRect(x, y, cellSize, cellSize)
+    context.strokeRect(x+inner, y+inner, cellSize-(inner*2),cellSize-(inner*2))
+}
 
 
 //controle virtual
@@ -831,9 +847,11 @@ btns[0].addEventListener("click", function (e) {
 document.getElementById("hold").addEventListener("click", function () {
 	hold();
 });
+
 document.addEventListener("dblclick", function (e) {
     e.preventDefault()
 })
+
 //teclado
 document.addEventListener("keydown", function (e) {
     let mykey = e.code
@@ -908,7 +926,6 @@ function activebtn () {
     high ();
     document.getElementById('openstart').addEventListener('click', startGame)
     canvasElements.init()
-    Sounds.loadBGM("korobeiniki")
   }
 
   main()
