@@ -12,12 +12,22 @@ class cell {
     }
     draw () {
         if (this.attribute != 0) {
-            let color = tetromino[this.attribute].color
-            let dark = tetromino[this.attribute].dark
+            let color
+            let dark
+            switch (this.attribute) {
+                case 8:
+                    color = "rgb(160, 160, 160)"
+                    dark = "rgb(200, 200, 200)"
+                    break;
+                default:
+                    color = tetromino[this.attribute].color
+                    dark = tetromino[this.attribute].dark
+                    break
+            }
             ce_field.fill(this.xPosition(), this.yPosition(), color, dark, cellSize)
         }
         else {
-            ce_field.blank(this.xPosition(), this.yPosition(), cellSize)
+            //ce_field.blank(this.xPosition(), this.yPosition(), cellSize)
 		}
     }
 }

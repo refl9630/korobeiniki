@@ -1,3 +1,4 @@
+const cellBuffer = 4                        //space reserved for spawning pieces
 const tetromino = {
     1 : {
         name: "i",
@@ -137,4 +138,25 @@ function getMap (shape) {
         }
     }
     return map
+}
+
+function generateTetromino () {
+    let n = nextPiece
+    nextPiece = Math.floor(7*Math.random()) + 1
+    let t = n
+    let shape = tetromino[t].shape
+    let startingx = 3
+    deltaY = 0
+    deltaX = startingx
+    rotation = 0
+    piece = t
+    for (let i = 0; i < shape[0].length; i++) {
+        for (let j = 0; j < shape[0].length; j++) {
+            if (shape[0][i][j] == 2) {
+                GameState.gameMap[i][j+startingx] = piece
+                GameState.stateMap[i][j+startingx] = 2
+            }
+        }
+    }
+    updateNext ()
 }

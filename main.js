@@ -1,11 +1,8 @@
-
-
-
 //canvas elements info
-const cellSize = 40
-const ce_field = new CanvasContext()
-const ce_held = new CanvasContext()
-const ce_next = new CanvasContext()
+const cellSize = 40                             //rendered cell size
+const ce_field = new CanvasContext()            //main field canvas
+const ce_held = new CanvasContext()             //held piece canvas
+const ce_next = new CanvasContext()             //next piece canvas
 const canvasElements = {
     "field": {
         "id": "gamegrid",
@@ -32,11 +29,6 @@ const canvasElements = {
     }
 }
 
-
-
-const cellBuffer = 4
-
-
 let speed = 800
 let score = 0
 let linesCleared = 0
@@ -45,6 +37,7 @@ let waitState = false
 let hscore
 let paused = false
 let indanger = false
+let over = false
 
 
 let rotation = 0
@@ -92,9 +85,11 @@ function startLevel (l) {
 }
 function gameLoop () {
     if (waitState != true) {
-    updateState ()
+        updateState ()
     }
-    setTimeout(gameLoop, speed);
+
+        setTimeout(gameLoop, speed);
+
 }
 function gameOver () {
     alert('Game Over')
@@ -102,7 +97,7 @@ function gameOver () {
         alert('NEW HIGH SCORE!');
         localStorage.setItem('high', score)
     }
-    window.location.reload()
+    window.location.reload();
 }
 function levelUp () {
     level ++
@@ -147,6 +142,7 @@ function high () {
 function updateState () {
     if (paused == false) {
     let falling = true
+    GameState.update()
     let movingblocks = GameState.fallingblocks
     if (movingblocks.length > 4) {
         console.log(GameState.gameMap, GameState.stateMap);
@@ -166,35 +162,16 @@ function updateState () {
         }
         else {
         waitState = true
-        settle (movingblocks)
+        settle ()
         waitState = false
         }
     }
     drawGrid ()
     }
 }
-function generateTetromino () {
-    let n = nextPiece
-    nextPiece = Math.floor(7*Math.random()) + 1
-    let t = n
-    let shape = tetromino[t].shape
-    let startingx = 3
-    deltaY = 0
-    deltaX = startingx
-    rotation = 0
-    piece = t
-    for (let i = 0; i < shape[0].length; i++) {
-        for (let j = 0; j < shape[0].length; j++) {
-            if (shape[0][i][j] == 2) {
-                GameState.gameMap[i][j+startingx] = piece
-                GameState.stateMap[i][j+startingx] = 2
-            }
-        }
-    }
-    updateNext ()
-}
-function settle (falling) {
-    let movingblocks = falling
+
+function settle () {
+    let movingblocks = GameState.fallingblocks
     Sounds.playFX("move")
     for (let i = 0; i < movingblocks.length; i++) {
         let myblock = movingblocks[i]
@@ -207,13 +184,14 @@ function settle (falling) {
     }
     switch (isOver()) {
         case true:
-            gameOver ();
+            gameOver()
             break;
         case false:
             danger();
             generateTetromino ();
             break;
     };
+    GameState.update()
 }
 function checkLine () {
     let completed = []
@@ -316,7 +294,7 @@ function moveDown (falling, drop) {
     drawGrid ()
 }
 function checkUnder (line, column) {
-    if (line == 23) {
+    if (line >= 23) {
         return false
     }
     else if ((GameState.stateMap[line+1][column]) == 1) {
@@ -347,11 +325,12 @@ function moveSide (side) {
                 deltaX++
                 break;
         };
-    for (let i = movingblocks.length-1; i >= 0; i--) {
+/*     for (let i = movingblocks.length-1; i >= 0; i--) {
         const move = movingblocks[i];
         GameState.gameMap[move.y][move.x] = 0;
         GameState.stateMap[move.y][move.x] = 0;
-    }
+    } */
+    GameState.eraseMoving ()
     for (let i = movingblocks.length-1; i >= 0; i--) {
         const move = movingblocks[i];
         let column = move.x;
@@ -394,30 +373,36 @@ function checkSides (line, column, side) {
     else {
         return true}
 }
+function dropDistance () {
+    let falling = true
+    let movingblocks = GameState.fallingblocks
+    let dr = 0;
+    while (falling == true) {
+        for (let i = 0; i < movingblocks.length; i++) {
+            let myblock = movingblocks[i]
+            if (checkUnder((myblock.y+dr), myblock.x) == false) {
+                falling = false
+            }
+        }
+        dr++
+    }
+    return dr
+}
 
 function hardDrop () {
     waitState = true;
-    let falling = true
     let movingblocks = GameState.fallingblocks
 	if (!holdKey) {
 	holdKey = true
     if (paused == false) {
-        let j = 0;
-        while (falling == true) {
-            for (let i = 0; i < movingblocks.length; i++) {
-                let myblock = movingblocks[i]
-                if (checkUnder((myblock.y+j), myblock.x) == false) {
-                    falling = false
-                }
-            }
-            j++
-        }
+        let j = dropDistance()
         Sounds.playFX("drop")
         moveDown (movingblocks, j-1)
         score += ((j-1)*2)
         updateScore ()
+        settle()
     } 
-    settle (GameState.fallingblocks)
+
     waitState = false 
 	}
 }
@@ -493,12 +478,11 @@ function hold () {
     let held = heldPiece
     let active = piece
     if (held !== undefined) {
-    heldPiece = active
-    piece = held
+        heldPiece = active
+        piece = held
     }
     else {
         heldPiece = active;
-        generateTetromino ()
     }
     updateHold ()
     rotate ("cw")

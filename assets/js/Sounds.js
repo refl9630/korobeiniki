@@ -50,7 +50,7 @@ const Sounds = {
 			})
 			this.load(info['path'], info["loop"], name)
 		}
-		console.log(this.sfx);
+//		console.log(this.sfx);
 	},
 	loadBGM (track) {
 		const info = this.soundvalues.music[track]

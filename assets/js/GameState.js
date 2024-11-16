@@ -60,6 +60,7 @@ const GameState = {
         return this.stateMap[y][x]
     },
 	fallingblocks: [],
+    preview: [],
 	update () {
 		this.fallingblocks = []
 		for (let i = 1; i <= 24; i++) {
@@ -70,16 +71,35 @@ const GameState = {
 						this.fallingblocks.push(position)
 					}
 				}
-			}
+		}
 		if (this.fallingblocks.length > 4) {
 			console.log(this.gameMap, this.stateMap);
 		}
+
+        this.previewg()
 	},
+    previewg () {
+        this.preview = []
+        const distance = dropDistance()
+        for (let i = 0; i < this.fallingblocks.length; i++) {
+            const myblock = this.fallingblocks[i];
+            
+            let gposition = {x: myblock.x, y: (myblock.y + distance - 1)}
+            this.preview.push(gposition)
+            
+            if (this.stateMap[gposition.y][gposition.x] == 0) {
+                this.gameMap[gposition.y][gposition.x] = 8
+            }
+        }
+    },
 	eraseMoving () {
 		let moving = this.fallingblocks
+        let ghost = this.preview
 		for (let i = 0; i < moving.length; i++) {
 			let cell = moving[i]
+            let pre = ghost[i]
 			this.gameMap[cell.y][cell.x] = 0
+            this.gameMap[pre.y][pre.x] = 0
 			this.stateMap[cell.y][cell.x] = 0      
 		}
 	}

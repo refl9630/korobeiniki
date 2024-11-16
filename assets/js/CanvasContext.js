@@ -18,7 +18,7 @@ class CanvasContext {
 		let context = this.pencil
 		let inner = size/16
 		context.lineWidth = 1 
-		context.strokeStyle = "black" 
+		context.strokeStyle = "gray" 
 		context.strokeRect(x, y, size,size)
 		context.fillStyle = color
 		context.fillRect(x, y, size,size)
