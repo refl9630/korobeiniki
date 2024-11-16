@@ -1,9 +1,10 @@
 //canvas elements info
 const cellSize = 40                             //rendered cell size
-const ce_field = new CanvasContext()            //main field canvas
-const ce_held = new CanvasContext()             //held piece canvas
-const ce_next = new CanvasContext()             //next piece canvas
+
 const canvasElements = {
+    fc: new ScreenGrid(),
+    hc: new ScreenGrid(),
+    nc: new ScreenGrid(),
     "field": {
         "id": "gamegrid",
         "w": 400,
@@ -19,6 +20,7 @@ const canvasElements = {
         "w": 200,
         "h": 200
     },
+    
     init () {
         ce_field.setElement(this.field.id);
         ce_field.setDimentions(this.field.w, this.field.h);
@@ -29,12 +31,16 @@ const canvasElements = {
     }
 }
 
+const ce_field = canvasElements.fc              //main field canvas
+const ce_held = canvasElements.hc              //held piece canvas
+const ce_next = canvasElements.nc              //next piece canvas
+
 let speed = 800
 let score = 0
 let linesCleared = 0
 let level = 0
 let waitState = false
-let hscore
+let hscore = 0
 let paused = false
 let indanger = false
 let over = false
@@ -59,14 +65,14 @@ function startGame () {
         console.log(e.target);
         
         if (e.target.type == "button") {
-        let l = e.target.value
-        console.log(l);
+            let l = e.target.value
+            console.log(l);
         
-        document.getElementById('pause').addEventListener('click', pause);
-        startLevel(l)
+            document.getElementById('pause').addEventListener('click', pause);
+            startLevel(l)
         }
         else {
-            startGame()
+            startLevel(1)
         }
     }, {once: true})
 }
@@ -84,21 +90,38 @@ function startLevel (l) {
     gameLoop ()
 }
 function gameLoop () {
-    if (waitState != true) {
-        updateState ()
+    if (over == true) {
+        gameOver()
+        alert('redundant')
     }
-
-        setTimeout(gameLoop, speed);
-
+    else {
+        if (waitState != true) {
+            updateState ()
+        }
+        setTimeout(function () {
+            if (over == false) {
+                gameLoop ();
+            }
+            else {
+                gameOver();
+            }
+        }, speed)
+    }
 }
 function gameOver () {
-    alert('Game Over')
+    let msg = "GAME OVER"
     if (score > hscore) {
-        alert('NEW HIGH SCORE!');
+        msg = "HIGH SCORE"
         localStorage.setItem('high', score)
     }
-    window.location.reload();
+    overAlert(msg)
 }
+async function overAlert (msg) {
+	popUp(msg, "alert").then (res => {
+ 		window.location.reload()
+	})
+}
+
 function levelUp () {
     level ++
     let baseSpd = 48
@@ -163,7 +186,6 @@ function updateState () {
         else {
         waitState = true
         settle ()
-        waitState = false
         }
     }
     drawGrid ()
@@ -182,13 +204,15 @@ function settle () {
     if (lines != false) {
         clearLines (lines)
     }
-    switch (isOver()) {
+    const confirmover = GameState.isOver()
+    switch (confirmover) {
         case true:
-            gameOver()
+            over = true
             break;
         case false:
             danger();
             generateTetromino ();
+            waitState = false
             break;
     };
     GameState.update()
@@ -233,16 +257,7 @@ function clearLines (lines) {
     }
     updateScore ()
 }
-function isOver () {
-    for (let i = 0; i < 4; i++) {
-        for (let j = 0; j < 10; j++) {
-            if (GameState.stateMap[i][j] == 1) {
-                return true;
-            }
-        }
-    }
-    return false;
-}
+
 function pause () {
     const pauseButton = document.getElementById('pause');
     switch (paused) {
@@ -385,6 +400,10 @@ function dropDistance () {
             }
         }
         dr++
+        if (dr > 23) {
+            falling = false
+            dr = 0
+        }
     }
     return dr
 }
@@ -475,6 +494,7 @@ function nextRotation (cr, di) {
 //guardar
 function hold () {
     if (paused == false) {
+        Sounds.playFX('beam')
     let held = heldPiece
     let active = piece
     if (held !== undefined) {
@@ -534,7 +554,7 @@ function updateNext () {
     high ();
     document.getElementById('openstart').addEventListener('click', startGame)
     canvasElements.init()
-    Sounds.loadBGM("korobeiniki")
-  }
+    Sounds.loadFX()
+    Sounds.loadBGM('korobeiniki')
+}
 
-  main()

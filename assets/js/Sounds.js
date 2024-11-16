@@ -88,5 +88,3 @@ const Sounds = {
 	}
 }
 
-Sounds.loadFX()
-Sounds.loadBGM()

@@ -1,7 +1,8 @@
-class CanvasContext {
+class ScreenGrid extends CanvasContext {
 	constructor () {
+		super()
 	}
-	setElement (elementid) {
+/* 	setElement (elementid) {
 		this.paper = document.getElementById(elementid);
 		this.pencil = document.getElementById(elementid).getContext('2d');
 	}
@@ -10,7 +11,7 @@ class CanvasContext {
 		this.height = height;
 		this.paper.width = width;
 		this.paper.height = height;
-	}
+	} */
 	getInfo () {
 
 	}

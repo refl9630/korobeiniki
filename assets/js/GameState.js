@@ -59,6 +59,9 @@ const GameState = {
     getState (y, x) {
         return this.stateMap[y][x]
     },
+    getLine (y) {
+        return this.stateMap[y]
+    },
 	fallingblocks: [],
     preview: [],
 	update () {
@@ -102,7 +105,19 @@ const GameState = {
             this.gameMap[pre.y][pre.x] = 0
 			this.stateMap[cell.y][cell.x] = 0      
 		}
-	}
+	},
+    isOver () {
+        const limitline = this.getLine(3)
+        let overst = false
+        for (let j = 0; j < 10; j++) {
+            if (limitline[j] == 1) {
+                overst = true;
+                break;
+            }
+        }
+        return overst;
+    }
+    
 }
 
 class Coord {

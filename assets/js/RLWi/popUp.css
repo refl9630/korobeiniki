@@ -1,0 +1,38 @@
+#overlay {
+    position: fixed; 
+    display: none; 
+    width: 100dvw; 
+    height: 100%; 
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.3); 
+    z-index: 4; 
+    cursor: pointer; 
+  }
+#pop{
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    font-size: xx-large;
+	background-color: rgb(53, 53, 91);
+    color: rgb(120, 0, 0);
+    transform: translate(-50%,-50%);
+    -ms-transform: translate(-50%,-50%);
+    z-index: 7;
+	padding: 15px;
+	border-radius: 2px;
+  }
+#pop p {
+	position: relative;
+	z-index: 8;
+	
+}
+#pop button {
+  background-color: rgb(19, 19, 81);
+  font-size: xx-large;
+  color: white;
+  font-family: inherit;
+  border: 2px ridge blue;
+}
